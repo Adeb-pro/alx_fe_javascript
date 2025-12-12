@@ -1,40 +1,42 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dynamic Quote Generator (Storage + Import/Export)</title>
+  <title>Dynamic Quote Generator</title>
   <style>
-    body { font-family: system-ui, Arial; padding: 20px; max-width: 800px; }
-    #quoteDisplay { padding: 12px; border: 1px solid #333; min-height: 60px; margin-bottom: 8px; width: 100%; box-sizing: border-box; }
-    .controls { margin-top: 12px; display:flex; gap:8px; flex-wrap:wrap; }
-    .form-row { margin-top:10px; display:flex; gap:8px; align-items:center; }
-    input[type="text"] { padding:6px; min-width:200px; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; }
+    #quoteDisplay { padding: 12px; border: 1px solid #333; min-height: 60px; margin-bottom: 10px; }
+    select, input, button { padding: 6px; }
+    .form-row { margin-top: 10px; display:flex; gap:8px; }
   </style>
 </head>
 <body>
-  <h1>Dynamic Quote Generator</h1>
 
-  <div id="quoteDisplay">Loading...</div>
+<h1>Dynamic Quote Generator</h1>
 
-  <div class="controls">
-    <button id="newQuote">Show New Quote</button>
-    <button id="exportBtn">Export Quotes (JSON)</button>
+<!-- Category Filter -->
+<label>Filter by Category:</label>
+<select id="categoryFilter" onchange="filterQuotes()">
+  <option value="all">All Categories</option>
+</select>
 
-    <!-- Import file input uses onchange to call importFromJsonFile -->
-    <input type="file" id="importFile" accept=".json,application/json" onchange="importFromJsonFile(event)" />
-  </div>
+<div id="quoteDisplay">Loading…</div>
 
-  <hr />
+<button id="newQuote">Show New Quote</button>
+<button id="exportBtn">Export Quotes (JSON)</button>
 
-  <h3>Add a New Quote</h3>
-  <!-- We'll still provide markup here, but script also exposes createAddQuoteForm if grader expects dynamic creation -->
-  <div id="addQuoteContainer" class="form-row">
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button id="addQuoteBtn">Add Quote</button>
-  </div>
+<input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
 
-  <script src="script.js"></script>
+<hr />
+
+<h3>Add a New Quote</h3>
+<div id="addQuoteContainer" class="form-row">
+  <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+  <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+  <button id="addQuoteBtn">Add Quote</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
