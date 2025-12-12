@@ -212,3 +212,66 @@ function escapeHtml(str) {
 
   filterQuotes(); // show first filtered quote
 })();
+
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
+// Fetch server quotes
+async function fetchServerQuotes() {
+  const response = await fetch(SERVER_URL);
+  const data = await response.json();
+
+  return data.slice(0, 10).map(item => ({
+    text: item.title,
+    category: "server"
+  }));
+}
+
+// Push local quotes to server
+async function pushLocalQuotesToServer(quotes) {
+  await fetch(SERVER_URL, {
+    method: "POST",
+    body: JSON.stringify(quotes),
+    headers: { "Content-Type": "application/json" }
+  });
+}
+
+// Conflict resolution (server wins)
+function resolveConflicts(local, server) {
+  const result = [...server];
+
+  local.forEach(l => {
+    if (!server.some(s => s.text === l.text)) {
+      result.push(l);
+    }
+  });
+
+  return result;
+}
+
+// Sync logic
+async function syncQuotes() {
+  try {
+    const serverQuotes = await fetchServerQuotes();
+    const localQuotes = loadQuotes();
+
+    const updated = resolveConflicts(localQuotes, serverQuotes);
+
+    if (JSON.stringify(updated) !== JSON.stringify(localQuotes)) {
+      saveQuotes(updated);
+      notifyUser("Quotes updated from server.");
+    }
+  } catch (e) {
+    console.error("Sync failed:", e);
+  }
+}
+
+// Notification UI
+function notifyUser(msg) {
+  const box = document.getElementById("notification");
+  box.innerText = msg;
+  box.style.display = "block";
+  setTimeout(() => (box.style.display = "none"), 4000);
+}
+
+// Periodic sync every 30 seconds
+setInterval(syncQuotes, 30000);
